@@ -351,7 +351,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 693154539, guid: 4e6f60b333370e1419ebf577333d4180, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1407,8 +1407,13 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 457784709}
-    PlayerPrefab: {fileID: 7278334525687078580, guid: ec200c2b713453442850ac80d079ffb9, type: 3}
-    NetworkPrefabs: []
+    PlayerPrefab: {fileID: 5462429003672564216, guid: a1dd09e7c5baba34a96fe3caf024c283, type: 3}
+    NetworkPrefabs:
+    - Override: 0
+      Prefab: {fileID: 5462429003672564216, guid: a1dd09e7c5baba34a96fe3caf024c283, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -2832,7 +2837,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -390138679, guid: baf5a5caeeb7ac042a26fc80f320629c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3382,7 +3387,8 @@ MonoBehaviour:
   hostButton: {fileID: 1986455805}
   joinButton: {fileID: 564735268}
   howToButton: {fileID: 930495049}
-  inputField: {fileID: 1369350930}
+  gameIdInput: {fileID: 1369350930}
+  nickField: {fileID: 1670394040}
 --- !u!114 &2100999457
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,9 +1,16 @@
 using UnityEngine;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour, IDamagable
 {
+    public string nick;
     public bool isRunning, isCrouchnig, isJumping;
     [SerializeField] private float maxHp;
+    [SerializeField] private Transform nickParent;
+    [SerializeField] private Transform healthBarParent;
+    [SerializeField] private TMP_Text nickDisplay;
+    private readonly Vector3 nickOffset = new Vector3(0, 2, 0);
+    
     private int _direction;
     private float _health;
     public bool isDead;
@@ -17,6 +24,7 @@ public class PlayerScript : MonoBehaviour, IDamagable
         }    
     }
     [SerializeField] private Transform healthBar;
+    private PlayerStateManager playerStateManager;
 
     public float Health {
         get => _health; 
@@ -30,10 +38,16 @@ public class PlayerScript : MonoBehaviour, IDamagable
             _health = newVal;
         } 
     }
+
+    public void SetNickDisplay() {
+        nickDisplay.text = nick;
+    }
+
     private Animator animator;
 
     void Start() {
         animator = GetComponent<Animator>();
+        playerStateManager = GetComponent<PlayerStateManager>();
         Health = maxHp;
     }
 
@@ -41,11 +55,15 @@ public class PlayerScript : MonoBehaviour, IDamagable
         animator.SetBool("Running", isRunning);
         animator.SetBool("Crouching", isCrouchnig);
         animator.SetBool("Jumping", isJumping);
+        nickParent.position = transform.position;
+        healthBarParent.position = transform.position;
     }
 
     void IDamagable.Damage(float damage) {
+        if (!playerStateManager.IsOwner) {
+            return;
+        }
         Health -= damage;
-        Debug.Log("I have " + Health + " hp now");
     }
 
 }

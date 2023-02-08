@@ -11,30 +11,38 @@ public class MenuUI : MonoBehaviour
     [SerializeField] private Button hostButton;
     [SerializeField] private Button joinButton;
     [SerializeField] private Button howToButton;
-    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private TMP_InputField gameIdInput;
+    [SerializeField] private TMP_InputField nickField;
 
-    void Start() {
-        inputField.lineLimit = 1;
-        inputField.characterLimit = 10;
+    private void Start() {
+        gameIdInput.lineLimit = 1;
+        gameIdInput.characterLimit = 10;
         quitButton.onClick.AddListener(() => Application.Quit());
-        hostButton.onClick.AddListener(() => 
-        {
-            SceneManager.LoadScene("MainScene");
-            relayManager.CreateRelay();
-        });
-        joinButton.onClick.AddListener(() =>
-        {
-            string code = inputField.text;
-            if (code == null) {
-                Debug.Log("Enter game id first!");
-            } else {
-                SceneManager.LoadScene("MainScene");
-                relayManager.JoinRelay(code);
-            }
-        });
+        hostButton.onClick.AddListener(() => CreateGame());
+        joinButton.onClick.AddListener(() => JoinGame());
     }
 
-    void Update() {
-        
+    private void CreateGame() {
+        string nick = nickField.text;
+        if (nick == null) {
+            Debug.Log("Enter your nick!");
+            return;
+        }
+        LocalPlayerInfo.nick = nick;
+        SceneManager.LoadScene("MainScene");
+        relayManager.CreateRelay();
     }
+
+    private void JoinGame() {
+        string code = gameIdInput.text;
+        string nick = nickField.text;
+        if (code == null || nick == null) {
+            Debug.Log("Enter game id and your nick!");
+        } else {
+            LocalPlayerInfo.nick = nick;
+            SceneManager.LoadScene("MainScene");
+            relayManager.JoinRelay(code);
+        }
+    }
+
 }

@@ -7,6 +7,7 @@ public class Weapon : NetworkBehaviour {
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private float damage;
     [SerializeField] private float reloadTime;
+    [SerializeField] private float maxAngle;
     [SerializeField] private GameObject impactEffect;
     private PlayerScript playerScript;
     private readonly float RAY_RANGE = 200f;
@@ -29,7 +30,7 @@ public class Weapon : NetworkBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 dir = (target - firePoint.transform.position).normalized;
-            Debug.Log(dir.ToString());
+            //Debug.Log(dir.ToString());
             RequestFireServerRpc(dir);
             StartCoroutine(Shoot(dir));
         }
@@ -48,6 +49,13 @@ public class Weapon : NetworkBehaviour {
     }
 
     IEnumerator Shoot(Vector3 dir) {
+        if (lastFired + reloadTime > Time.time) {
+            yield break;
+        }
+        if (Vector2.Angle(firePoint.right, dir) > maxAngle) {
+            yield break;
+        }
+        lastFired = Time.time;
         RaycastHit2D hit = Physics2D.Raycast(firePoint.position, dir, RAY_RANGE, ~(1 << 6));
         lineRenderer.SetPosition(0, firePoint.position);
         if (hit) {
@@ -58,9 +66,8 @@ public class Weapon : NetworkBehaviour {
             lineRenderer.SetPosition(1, hit.point);
             Instantiate(impactEffect, hit.point, Quaternion.identity);
         } else {
-            lineRenderer.SetPosition(1, firePoint.position + firePoint.right * 100);
+            lineRenderer.SetPosition(1, firePoint.position + dir * RAY_RANGE); //DLACZEGO TO TAK DZIAŁA JAK DZIAŁA A NIE INACZEJ??
         }
-
         lineRenderer.enabled = true;
         yield return new WaitForSeconds(0.02f);
         lineRenderer.enabled = false;
