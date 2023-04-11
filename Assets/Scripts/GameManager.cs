@@ -1,10 +1,13 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum GameState {
     ACTIVE,
     WAITING,
     OVER
 }
+
+
 
 public class GameManager : MonoBehaviour {
     private GameState gameState;
@@ -17,10 +20,12 @@ public class GameManager : MonoBehaviour {
     public GameState GetGameState() {
         return gameState;
     }
+
     private void Start() {
         gameState = GameState.ACTIVE;
     }
-    private void RegisterPlayer() {
 
+    private void RegisterPlayer() {
+    
     }
 }

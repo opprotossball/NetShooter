@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Collections;
 
 public class PlayerStateManager : NetworkBehaviour
 {
@@ -38,31 +39,32 @@ public class PlayerStateManager : NetworkBehaviour
     [SerializeField] private float interpolationTime = 0.1f;
     private PlayerScript playerScript;
     private NetworkVariable<PlayerNetworkState> networkState;
+    private NetworkVariable<FixedString32Bytes> nick;
     private GameManager gameManager;
     private Rigidbody2D rb;
-    private Vector2 interpolateVel;
 
     private void Awake() {
         rb = GetComponent<Rigidbody2D>();
         var permission = serverAuth ? NetworkVariableWritePermission.Server : NetworkVariableWritePermission.Owner;
         networkState = new NetworkVariable<PlayerNetworkState>(writePerm: permission);
+        nick = new NetworkVariable<FixedString32Bytes>(writePerm: NetworkVariableWritePermission.Owner);
         playerScript = GetComponent<PlayerScript>();
         gameManager = FindObjectOfType<GameManager>();
+        nick.OnValueChanged += (sender, args) =>
+        {
+            playerScript.nick = nick.Value.ToString();
+            playerScript.SetNickDisplay();
+        };
     }
 
     public override void OnNetworkSpawn() {
         if (!IsOwner) {
             Destroy(transform.GetComponent<PlayerController>());
-        } else {
-            Camera.main.gameObject.GetComponent<CameraFollow>().followed = transform;
-            RegisterPlayerServerRpc();
-            playerScript.nick = LocalPlayerInfo.nick;
+            playerScript.nick = nick.Value.ToString();
             playerScript.SetNickDisplay();
-            if (IsClient) {
-                RequestSetNickServerRpc(LocalPlayerInfo.nick);
-            } else {
-                SetNickClientRpc(LocalPlayerInfo.nick);
-            }
+        } else {
+            nick.Value = LocalPlayerInfo.nick;
+            Camera.main.gameObject.GetComponent<CameraFollow>().followed = transform;
         }
     }
 
@@ -83,19 +85,6 @@ public class PlayerStateManager : NetworkBehaviour
     [ServerRpc]
     private void DestoryServerRpc() {
         Destroy(transform.parent.gameObject);
-    }
-
-    [ServerRpc]
-    private void RequestSetNickServerRpc(string nick) {
-        SetNickClientRpc(nick);
-    }
-
-    [ClientRpc]
-    private void SetNickClientRpc(string nick) {
-        if (!IsOwner) {
-            this.playerScript.nick = nick;
-            playerScript.SetNickDisplay();
-        }
     }
 
     [ServerRpc]

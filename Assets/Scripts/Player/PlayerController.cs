@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform feetPos;
@@ -24,24 +25,61 @@ public class PlayerController : MonoBehaviour
         if (playerScript.isDead) {
             return;
         }
-        
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
 
-        if (Input.GetKey(KeyCode.A)) {
+        ChangeWeapon();
+        Fire();
+        Move();
+    }
+
+    private void ChangeWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            playerScript.selectedWeapon = playerScript.rifle;
+        }
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            playerScript.selectedWeapon = playerScript.throwGrenade;
+        }
+    }
+
+    private void Fire()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 dir = (target - playerScript.selectedWeapon.firePoint.transform.position).normalized;
+            dir.z = 0f;
+            playerScript.selectedWeapon.RequestFireServerRpc(dir);
+            playerScript.selectedWeapon.Fire(dir);
+        }
+    }
+
+    private void Move()
+    {
+        if (Input.GetKey(KeyCode.A))
+        {
             runningDirection = -1;
-        } else if (Input.GetKey(KeyCode.D)) {
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
             runningDirection = 1;
-        } else {
+        }
+        else
+        {
             runningDirection = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.W) && isGrounded) {
+        if (Input.GetKeyDown(KeyCode.W) && isGrounded)
+        {
             rb.velocity = Vector2.up * jump;
         }
 
-        if (runningDirection != 0) {
+        if (runningDirection != 0)
+        {
             playerScript.Direction = runningDirection;
-        }    
+        }
         playerScript.isRunning = runningDirection != 0;
         playerScript.isJumping = !isGrounded;
     }
