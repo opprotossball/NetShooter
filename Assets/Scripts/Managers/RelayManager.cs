@@ -1,3 +1,5 @@
+using Mono.Cecil.Cil;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Services.Authentication;
@@ -22,12 +24,11 @@ public class RelayManager : MonoBehaviour
         return createdCode;
     }
 
-    public async void CreateRelay() {
+    public async Task CreateRelay() {
         try {
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(CLIENTS_NUMBER);
             createdCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.Log(createdCode);
-
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetHostRelayData(
                 allocation.RelayServer.IpV4,
                 (ushort)allocation.RelayServer.Port,
@@ -36,13 +37,13 @@ public class RelayManager : MonoBehaviour
                 allocation.ConnectionData
             );
             NetworkManager.Singleton.StartHost();
-
+            MainSceneUI.instance.SetGameCode(createdCode);
         } catch (RelayServiceException e) {
             Debug.Log(e);
         }
     }
 
-    public async void JoinRelay(string joinCode) {
+    public async Task JoinRelay(string joinCode) {
         try {
             Debug.Log("Joining Relay with " + joinCode);
             JoinAllocation allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
@@ -56,8 +57,9 @@ public class RelayManager : MonoBehaviour
                 allocation.HostConnectionData
             );
             NetworkManager.Singleton.StartClient();
-
-        } catch (RelayServiceException e) {
+            MainSceneUI.instance.SetGameCode(joinCode);
+        }
+        catch (RelayServiceException e) {
             Debug.Log(e);
         }
     }

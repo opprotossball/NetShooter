@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 011b209c49bc911418de015c30d75def, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 300
+  damage: 250
   explosionPoint: {fileID: 328407874815565787}
   range: 10
   destroyDelay: 0.02

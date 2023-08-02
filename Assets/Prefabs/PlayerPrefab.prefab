@@ -113,7 +113,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6706631041318204012}
-  - {fileID: 1056898297514833299}
   m_Father: {fileID: 2986696782174378221}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -423,6 +422,7 @@ GameObject:
   - component: {fileID: 899951171346670832}
   - component: {fileID: 4486893447960454452}
   - component: {fileID: 5621886755265430459}
+  - component: {fileID: 3448144726000510085}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -445,6 +445,7 @@ Transform:
   - {fileID: 1969445267235762675}
   - {fileID: 8390885042511337413}
   - {fileID: 8273631422039310123}
+  - {fileID: 1056898297514833299}
   m_Father: {fileID: 5462429003672564219}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -590,7 +591,7 @@ MonoBehaviour:
   cooldownTime: 0.2
   maxAngle: 90
   magSize: 6
-  magReloadTime: 1.5
+  magReloadTime: 2
   ammo: 0
   infinityAmmo: 1
   lineRenderer: {fileID: 7222417347344513093}
@@ -612,7 +613,7 @@ MonoBehaviour:
   isRunning: 0
   isCrouchnig: 0
   isJumping: 0
-  selectedWeapon: {fileID: 0}
+  selectedWeapon: {fileID: 8540841168471813419}
   rifle: {fileID: 8540841168471813419}
   throwGrenade: {fileID: 5621886755265430459}
   maxHp: 100
@@ -620,6 +621,10 @@ MonoBehaviour:
   healthBarParent: {fileID: 2986696782174378221}
   nickDisplay: {fileID: 387900747518068767}
   bullets: {fileID: 8213084071438742274}
+  trajectoryPoint: {fileID: 6050155934370085405, guid: 69f7df8511b3ecc479c6d6d47b46f7db, type: 3}
+  trajectoryPointsCount: 200
+  trajectoryPointsDistance: 0.03
+  trajectoryPoints: []
   isDead: 0
   healthBar: {fileID: 1317283147353489922}
 --- !u!114 &899951171346670832
@@ -675,11 +680,23 @@ MonoBehaviour:
   cooldownTime: 0.1
   maxAngle: 90
   magSize: 1
-  magReloadTime: 0.1
+  magReloadTime: 1.5
   ammo: 5
   infinityAmmo: 0
   grenade: {fileID: 2043734843758092144, guid: 75891d64b97ff3947819e623f35da29c, type: 3}
-  force: 0.5
+  force: 20
+--- !u!114 &3448144726000510085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3373095570786953333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0b3809837584147ac5205970548264, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3694675783435935716
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,13 +721,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3694675783435935716}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: -1.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7008114862703181892}
-  m_Father: {fileID: 1317283147353489922}
-  m_RootOrder: 1
+  m_Father: {fileID: 3373095570786953332}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4583124078983243065
 GameObject:

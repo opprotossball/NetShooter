@@ -14,6 +14,7 @@ public abstract class AWeapon : NetworkBehaviour
     protected int loadedAmmo;
     protected float startedReloading;
     protected float lastFired;
+    private float reloadingTime = 0;
 
     public abstract void Shoot(Vector3 dir);
     private void ManageAmmo()
@@ -30,10 +31,6 @@ public abstract class AWeapon : NetworkBehaviour
     [ServerRpc]
     public void RequestFireServerRpc(Vector3 dir)
     {
-        if (!CanShoot(dir))
-        {
-            return;
-        }
         FireClientRpc(dir);
     }
 
@@ -46,12 +43,15 @@ public abstract class AWeapon : NetworkBehaviour
         }
     }
 
+    public void OwnerFire(Vector3 dir)
+    {
+        if (!CanShoot(dir)) { return; }
+        Fire(dir);
+        RequestFireServerRpc(dir);
+    }
+
     public void Fire(Vector3 dir)
     {
-        if (!CanShoot(dir))
-        {
-            return;
-        }
         ManageAmmo();
         Shoot(dir);
     }
@@ -61,9 +61,22 @@ public abstract class AWeapon : NetworkBehaviour
         return (loadedAmmo > 0 && lastFired + cooldownTime <= Time.time && Vector2.Angle(firePoint.right, dir) <= maxAngle);
     }
 
-    protected virtual void Update()
+    private void Start()
     {
-        if (loadedAmmo < 1 && Time.time > startedReloading + magReloadTime)
+        lastFired = Time.time;
+        loadedAmmo = magSize;
+    }
+
+    public bool OutOfAmmo()
+    {
+        return (!infinityAmmo && ammo < 1);
+    }
+
+    public void Reload()
+    {   
+        if (OutOfAmmo()) { return; }
+        if (loadedAmmo < 1) { reloadingTime += Time.deltaTime; }
+        if (loadedAmmo < 1 && reloadingTime > magReloadTime)
         {
             if (infinityAmmo)
             {
@@ -74,7 +87,15 @@ public abstract class AWeapon : NetworkBehaviour
                 loadedAmmo = Mathf.Min(magSize, ammo);
                 ammo -= loadedAmmo;
             }
+            reloadingTime = 0;
         }
+        
+    }
+
+    public float TimeToReload()
+    {
+        if (loadedAmmo < 1 && OutOfAmmo()) { return 1; }
+        return reloadingTime / magReloadTime;
     }
 
     public int GetLoadedAmmo()

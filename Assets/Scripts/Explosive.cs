@@ -12,12 +12,11 @@ public abstract class Explosive : MonoBehaviour
     {
         float step = 360 / (float)nRays;
         float angle = 0;
-        float damagePerRay = damage / nRays;
-        Debug.Log(transform.position);
+        float damagePerRay = damage / (float)nRays;
         while (angle < 360)
         {
             Vector3 dir = transform.TransformDirection(Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.one);
-            RaycastHit2D hit = Physics2D.Raycast(explosionPoint.position, dir, range, ~(1 << 6 | 1 << 7));
+            RaycastHit2D hit = Physics2D.Raycast(explosionPoint.position, dir, range, ~(1 << 6));
             if (hit)
             {
                 IDamagable target = hit.transform.GetComponent<IDamagable>();

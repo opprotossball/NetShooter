@@ -11,18 +11,16 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded;
     private int runningDirection = 0;
     private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
     private PlayerScript playerScript;
 
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         playerScript = GetComponent<PlayerScript>();
         whatIsGround = ((1 << 6) | (1 << 3));
     }
 
     private void Update() {
-        if (playerScript.isDead) {
+        if (playerScript.isDead || GameManager.instance.GetGameState() != GameState.ACTIVE) {
             return;
         }
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
@@ -37,10 +35,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F1))
         {
             playerScript.selectedWeapon = playerScript.rifle;
+            playerScript.SetTrajectoryVisibility(false);
+            MainSceneUI.instance.SetActiveWeapon(Weapon.RIFLE);
         }
         if (Input.GetKeyDown(KeyCode.F2))
         {
             playerScript.selectedWeapon = playerScript.throwGrenade;
+            MainSceneUI.instance.SetActiveWeapon(Weapon.GRENADE);
         }
     }
 
@@ -51,8 +52,7 @@ public class PlayerController : MonoBehaviour
             Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 dir = (target - playerScript.selectedWeapon.firePoint.transform.position).normalized;
             dir.z = 0f;
-            playerScript.selectedWeapon.RequestFireServerRpc(dir);
-            playerScript.selectedWeapon.Fire(dir);
+            playerScript.selectedWeapon.OwnerFire(dir);
         }
     }
 

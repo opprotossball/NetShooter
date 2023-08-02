@@ -449,7 +449,7 @@ MonoBehaviour:
   range: 10
   destroyDelay: 0.02
   explosionEffect: {fileID: 4472583567778788616, guid: 1b43cfbc96cf1214b91d140f33a384cc, type: 3}
-  maxHp: 40
+  maxHp: 70
   healthBar: {fileID: 768133840530343846}
 --- !u!1 &8425239158212923929
 GameObject:

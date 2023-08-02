@@ -52,15 +52,21 @@ public class PlayerStateManager : NetworkBehaviour
         gameManager = FindObjectOfType<GameManager>();
         nick.OnValueChanged += (sender, args) =>
         {
-            playerScript.nick = nick.Value.ToString();
-            playerScript.SetNickDisplay();
+            string val = nick.Value.ToString();
+            if (val.Length > 0)
+            {
+                playerScript.nick = nick.Value.ToString();
+                playerScript.SetNickDisplay();
+            }
         };
     }
 
     public override void OnNetworkSpawn() {
         if (!IsOwner) {
             Destroy(transform.GetComponent<PlayerController>());
-            playerScript.nick = nick.Value.ToString();
+            string val = nick.Value.ToString();
+            if (val.Length == 0) return;
+            playerScript.nick = val;
             playerScript.SetNickDisplay();
         } else {
             nick.Value = LocalPlayerInfo.nick;

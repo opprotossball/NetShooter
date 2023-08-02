@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using Unity.Netcode;
 
 public class Rifle : AWeapon { 
     [SerializeField] private LineRenderer lineRenderer;
@@ -8,16 +7,6 @@ public class Rifle : AWeapon {
     [SerializeField] private GameObject impactEffect;
 
     private readonly float RAY_RANGE = 200f;
-
-
-    private void Start() {
-        lastFired = Time.time;
-        loadedAmmo = magSize;
-    }
-
-    //protected override void Update() {
-    //    base.Update();
-    //}
 
     public override void Shoot(Vector3 dir)
     {

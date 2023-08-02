@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 public class MenuUI : MonoBehaviour
 {
     [SerializeField] private RelayManager relayManager;
@@ -28,9 +27,9 @@ public class MenuUI : MonoBehaviour
             Debug.Log("Enter your nick!");
             return;
         }
+        _ = relayManager.CreateRelay();
         LocalPlayerInfo.nick = nick;
         SceneManager.LoadScene("MainScene");
-        relayManager.CreateRelay();
     }
 
     private void JoinGame() {
@@ -40,9 +39,9 @@ public class MenuUI : MonoBehaviour
             Debug.Log("Enter game id and your nick!");
         } else {
             LocalPlayerInfo.nick = nick;
+            _ = relayManager.JoinRelay(code);
             SceneManager.LoadScene("MainScene");
-            relayManager.JoinRelay(code);
         }
-    }
+    }   
 
 }
